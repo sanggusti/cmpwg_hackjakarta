@@ -1,6 +1,5 @@
 import os
 from typing import List
-from pprint import pprint
 
 import cohere
 import langchain
@@ -10,22 +9,14 @@ import pandas as pd
 from langchain.agents import Tool
 from langchain_core.pydantic_v1 import BaseModel, Field
 from langchain_experimental.utilities import PythonREPL
-from sklearn.metrics.pairwise import cosine_similarity
 from dotenv import load_dotenv
 
-# Load the environment variables from .env file
+# load the environment variables from .env file
 load_dotenv()
 
-# Get the COHERE_API_KEY from the environment variables
+# setup the cohere client
 COHERE_API_KEY = os.getenv("COHERE_API_KEY")
-
-# versions
 CHAT_URL= "https://api.cohere.ai/v1/chat"
 COHERE_MODEL = 'command-r-plus'
 co = cohere.Client(api_key=COHERE_API_KEY)
 
-# if successful, print the message
-print("Cohere API key loaded successfully")
-
-
-# if __name__ == "__main__":
