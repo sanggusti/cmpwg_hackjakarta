@@ -667,6 +667,20 @@ files = [
 test = ["pytest (>=6)"]
 
 [[package]]
+name = "faker"
+version = "26.0.0"
+description = "Faker is a Python package that generates fake data for you."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "Faker-26.0.0-py3-none-any.whl", hash = "sha256:886ee28219be96949cd21ecc96c4c742ee1680e77f687b095202c8def1a08f06"},
+    {file = "Faker-26.0.0.tar.gz", hash = "sha256:0f60978314973de02c00474c2ae899785a42b2cf4f41b7987e93c132a2b8a4a9"},
+]
+
+[package.dependencies]
+python-dateutil = ">=2.4"
+
+[[package]]
 name = "fastapi"
 version = "0.111.1"
 description = "FastAPI framework, high performance, easy to learn, fast to code, ready for production"
@@ -1496,6 +1510,27 @@ PyYAML = ">=5.3"
 requests = ">=2,<3"
 SQLAlchemy = ">=1.4,<3"
 tenacity = ">=8.1.0,<8.4.0 || >8.4.0,<9.0.0"
+
+[[package]]
+name = "langchain-cohere"
+version = "0.1.9"
+description = "An integration package connecting Cohere and LangChain"
+optional = false
+python-versions = "<4.0,>=3.8.1"
+files = [
+    {file = "langchain_cohere-0.1.9-py3-none-any.whl", hash = "sha256:96d6a15125797319474ac84b54024e5024f3f5fc45032ebf228d95d6998c9b13"},
+    {file = "langchain_cohere-0.1.9.tar.gz", hash = "sha256:549620d23bc3d77f62d1045787095fe2c1cfa233dba69455139f9a2f65f952fa"},
+]
+
+[package.dependencies]
+cohere = ">=5.5.6,<6.0"
+langchain-core = ">=0.2.2,<0.3"
+langchain-experimental = ">=0.0.6"
+pandas = ">=1.4.3"
+tabulate = ">=0.9.0,<0.10.0"
+
+[package.extras]
+langchain-community = ["langchain-community (>=0.2.4)"]
 
 [[package]]
 name = "langchain-community"
@@ -2418,6 +2453,57 @@ mic = ["olefile"]
 tests = ["check-manifest", "coverage", "defusedxml", "markdown2", "olefile", "packaging", "pyroma", "pytest", "pytest-cov", "pytest-timeout"]
 typing = ["typing-extensions"]
 xmp = ["defusedxml"]
+
+[[package]]
+name = "pinecone-client"
+version = "5.0.0"
+description = "Pinecone client and SDK"
+optional = false
+python-versions = "<4.0,>=3.8"
+files = [
+    {file = "pinecone_client-5.0.0-py3-none-any.whl", hash = "sha256:243a58b761835a05629fe5bfc863ffa49c89d58e700b869e7b57ed7822c14311"},
+    {file = "pinecone_client-5.0.0.tar.gz", hash = "sha256:da2c10214a72b452e88a861a6db469ba6bf7caec22a0324467018d54188fffcd"},
+]
+
+[package.dependencies]
+certifi = ">=2019.11.17"
+pinecone-plugin-inference = "1.0.2"
+pinecone-plugin-interface = ">=0.0.7,<0.0.8"
+tqdm = ">=4.64.1"
+typing-extensions = ">=3.7.4"
+urllib3 = [
+    {version = ">=1.26.0", markers = "python_version >= \"3.8\" and python_version < \"3.12\""},
+    {version = ">=1.26.5", markers = "python_version >= \"3.12\" and python_version < \"4.0\""},
+]
+
+[package.extras]
+grpc = ["googleapis-common-protos (>=1.53.0)", "grpcio (>=1.44.0)", "grpcio (>=1.59.0)", "lz4 (>=3.1.3)", "protobuf (>=4.25,<5.0)", "protoc-gen-openapiv2 (>=0.0.1,<0.0.2)"]
+
+[[package]]
+name = "pinecone-plugin-inference"
+version = "1.0.2"
+description = "Embeddings plugin for Pinecone SDK"
+optional = false
+python-versions = "<4.0,>=3.8"
+files = [
+    {file = "pinecone_plugin_inference-1.0.2-py3-none-any.whl", hash = "sha256:ef94e7f51554e780408cf1507888b120bb0d185b8485a903cbeb9d0176ee03f1"},
+    {file = "pinecone_plugin_inference-1.0.2.tar.gz", hash = "sha256:dda62d9ff44dbbf191b11e6e884235f329cf0ec22edc616fe7efcb1e479e6a9a"},
+]
+
+[package.dependencies]
+pinecone-client = ">=4.1.1,<6.0.0"
+pinecone-plugin-interface = ">=0.0.7,<0.0.8"
+
+[[package]]
+name = "pinecone-plugin-interface"
+version = "0.0.7"
+description = "Plugin interface for the Pinecone python client"
+optional = false
+python-versions = "<4.0,>=3.8"
+files = [
+    {file = "pinecone_plugin_interface-0.0.7-py3-none-any.whl", hash = "sha256:875857ad9c9fc8bbc074dbe780d187a2afd21f5bfe0f3b08601924a61ef1bba8"},
+    {file = "pinecone_plugin_interface-0.0.7.tar.gz", hash = "sha256:b8e6675e41847333aa13923cc44daa3f85676d7157324682dc1640588a982846"},
+]
 
 [[package]]
 name = "protobuf"
@@ -4437,4 +4523,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10, <3.13"
-content-hash = "355731dcf18f2b009374177892d9e7fa01a48d1d5416aa1d10b2a830ad4ff798"
+content-hash = "f0d7e55f28aa4447854c5ba10aa58ed1f2241276c2d21b6c10c0bc00c7d8fc81"

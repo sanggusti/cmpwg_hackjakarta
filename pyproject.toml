@@ -26,6 +26,9 @@ langchain-experimental = "^0.0.63"
 hnswlib = "^0.8.0"
 unstructured = "^0.15.0"
 streamlit = "^1.37.0"
+faker = "^26.0.0"
+langchain-cohere = "^0.1.9"
+pinecone-client = "^5.0.0"
 
 
 [build-system]
