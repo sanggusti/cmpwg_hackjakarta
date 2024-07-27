@@ -4,7 +4,7 @@ Merchant Apps Powered with Cohere Command R+, Streamlit, Langchain, Langchain Ex
 
 ## About the Project
 
-This project would like to deliver an app that scope utilization of LLM Agent to various purposes of Merchant for a description, promotion, strategy, trends seeking and give a img to gif image to its product. For the user it would also be with a recommender system for the menu, diets, approximation of calorie and interface improvement.
+Enable Finance Analysis Bot that is capable of Internet Search and Executing Tools to generate Financial Report so the Merchant could have its own Data Analyst, Enable QoL enhancement on Menu creation for the Merchant, Food Image Beautifier, Caption Generation, Automated tagging with RAG, Nutritional Approximation Model by Ingredients Listing, Supply Manager to Balance Order, Forecasted Order and Supplies available.
 
 ## Getting Started
 
