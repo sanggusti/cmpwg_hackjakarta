@@ -2,6 +2,7 @@ import streamlit as st
 import cohere
 from dotenv import load_dotenv
 import os
+import json
 import re
 
 # Load environment variables
@@ -21,7 +22,7 @@ if 'menu_items' not in st.session_state:
 if 'current_ingredients' not in st.session_state:
     st.session_state['current_ingredients'] = []
 if 'tag_options' not in st.session_state:
-    st.session_state['tag_options'] = ["Vegan", "Vegetarian", "Gluten-Free", "Spicy", "Nut-Free"]
+    st.session_state['tag_options'] = ["Vegan", "Vegetarian", "Gluten-Free", "Spicy", "Nut-Free", "Bakso", "Sapi", "Mie"]
 if 'description' not in st.session_state:
     st.session_state['description'] = ""
 if 'food_name' not in st.session_state:
@@ -34,6 +35,8 @@ if 'carbs' not in st.session_state:
     st.session_state['carbs'] = 0.0
 if 'fats' not in st.session_state:
     st.session_state['fats'] = 0.0
+if 'generated_tags' not in st.session_state:
+    st.session_state['generated_tags'] = []
 
 # Page title
 st.title("Menu Details Input")
@@ -53,41 +56,11 @@ if st.button("Generate Description"):
             response = co.generate(
                 model='command-xlarge-nightly',
                 prompt=prompt,
-                max_tokens=100
+                max_tokens=80
             )
             generated_description = response.generations[0].text.strip()
             st.session_state['description'] = generated_description
             st.success("Description generated!")
-        except Exception as e:
-            st.error(f"An error occurred: {str(e)}")
-    else:
-        st.warning("Please enter the food name and ingredients first.")
-
-# Button to generate nutritional values using Cohere
-if st.button("Generate Nutritional Values"):
-    if st.session_state['food_name'] and st.session_state.current_ingredients:
-        ingredients_list = ', '.join(st.session_state.current_ingredients)
-        prompt = f"Estimate the nutritional values including calories, proteins, carbs, and fats for a dish called {st.session_state['food_name']} with ingredients like {ingredients_list}."
-        try:
-            response = co.generate(
-                model='command-xlarge-nightly',
-                prompt=prompt,
-                max_tokens=100
-            )
-            generated_text = response.generations[0].text.strip()
-
-            # Extract nutritional information from the generated text using regular expressions
-            calories_match = re.search(r'calories:\s*(\d+)', generated_text, re.IGNORECASE)
-            proteins_match = re.search(r'proteins:\s*(\d+\.?\d*)g', generated_text, re.IGNORECASE)
-            carbs_match = re.search(r'carbs:\s*(\d+\.?\d*)g', generated_text, re.IGNORECASE)
-            fats_match = re.search(r'fats:\s*(\d+\.?\d*)g', generated_text, re.IGNORECASE)
-
-            st.session_state['calories'] = int(calories_match.group(1)) if calories_match else 0
-            st.session_state['proteins'] = float(proteins_match.group(1)) if proteins_match else 0.0
-            st.session_state['carbs'] = float(carbs_match.group(1)) if carbs_match else 0.0
-            st.session_state['fats'] = float(fats_match.group(1)) if fats_match else 0.0
-
-            st.success("Nutritional values generated!")
         except Exception as e:
             st.error(f"An error occurred: {str(e)}")
     else:
@@ -108,25 +81,70 @@ st.write("Ingredients Added:")
 for i, ingredient in enumerate(st.session_state.current_ingredients, 1):
     st.write(f"{i}. {ingredient}")
 
-# Tags
-st.subheader("Tags")
-selected_tags = st.multiselect("Select Tags", options=st.session_state['tag_options'], default=[])
+# Tags and Nutritional Value
+st.subheader("Nutritional Value & Tags")
+if st.button("Generate Nutritional Values & Tags"):
+    if st.session_state['food_name'] and st.session_state.current_ingredients:
+        ingredients_list = ', '.join(st.session_state.current_ingredients)
+        prompt = f"""
+        You are an AI specialized in predicting or estimating the number of calories and nutritional information of food items, and assigning appropriate dietary tags. 
+        Analyze the following dish details and provide the calories, proteins, carbs, and fats, along with suitable dietary tags.
+        Dish: {st.session_state['food_name']}
+        Ingredients: {ingredients_list}
+        Return the response in JSON format with keys 'calories', 'proteins', 'carbs', 'fats', and 'tags'.
 
-# Add New Tag
-new_tag = st.text_input("Add a New Tag")
-if st.button("Add Tag"):
-    if new_tag and new_tag not in st.session_state['tag_options']:
-        st.session_state['tag_options'].append(new_tag)
-        st.success(f"Tag '{new_tag}' added!")
-    elif new_tag:
-        st.warning(f"Tag '{new_tag}' already exists.")
+        JSON Format: {{"calories": int, "proteins": float, "carbs": float, "fats": float, "tags": ["tag1", "tag2"]}}
+        """
 
-# Nutritional Value
-st.subheader("Nutritional Value")
-st.session_state['calories'] = st.number_input("Calories", min_value=0, step=1, value=st.session_state['calories'])
-st.session_state['proteins'] = st.number_input("Proteins (g)", min_value=0.0, step=0.1, value=st.session_state['proteins'])
-st.session_state['carbs'] = st.number_input("Carbohydrates (g)", min_value=0.0, step=0.1, value=st.session_state['carbs'])
-st.session_state['fats'] = st.number_input("Fats (g)", min_value=0.0, step=0.1, value=st.session_state['fats'])
+        try:
+            response = co.generate(
+                model='command-xlarge-nightly',
+                prompt=prompt,
+                max_tokens=100
+            )
+            generated_text = response.generations[0].text.strip()
+
+            # Extract data using regular expressions or JSON parsing
+            try:
+                # If the response is valid JSON, load it directly
+                data = json.loads(generated_text)
+            except json.JSONDecodeError:
+                # Fallback: extract with regex if JSON is malformed
+                calories_match = re.search(r'"calories":\s*(\d+)', generated_text)
+                proteins_match = re.search(r'"proteins":\s*(\d+\.?\d*)', generated_text)
+                carbs_match = re.search(r'"carbs":\s*(\d+\.?\d*)', generated_text)
+                fats_match = re.search(r'"fats":\s*(\d+\.?\d*)', generated_text)
+                tags_match = re.search(r'"tags":\s*\[(.*?)\]', generated_text)
+
+                data = {
+                    'calories': int(calories_match.group(1)) if calories_match else 0,
+                    'proteins': float(proteins_match.group(1)) if proteins_match else 0.0,
+                    'carbs': float(carbs_match.group(1)) if carbs_match else 0.0,
+                    'fats': float(fats_match.group(1)) if fats_match else 0.0,
+                    'tags': [tag.strip().strip('"') for tag in tags_match.group(1).split(',')] if tags_match else []
+                }
+
+            st.session_state['calories'] = data.get('calories', 0)
+            st.session_state['proteins'] = data.get('proteins', 0.0)
+            st.session_state['carbs'] = data.get('carbs', 0.0)
+            st.session_state['fats'] = data.get('fats', 0.0)
+            st.session_state['generated_tags'] = data.get('tags', [])
+
+            st.success("Nutritional values and tags generated!")
+        except Exception as e:
+            st.error(f"An error occurred: {str(e)}")
+    else:
+        st.warning("Please enter the food name and ingredients first.")
+
+# Display generated nutritional values and tags
+st.write("**Generated Nutritional Values:**")
+st.write(f"Calories: {st.session_state['calories']}")
+st.write(f"Proteins: {st.session_state['proteins']}g")
+st.write(f"Carbohydrates: {st.session_state['carbs']}g")
+st.write(f"Fats: {st.session_state['fats']}g")
+
+st.write("**Generated Tags:**")
+st.write(', '.join(st.session_state['generated_tags']))
 
 # Save Button
 if st.button("Save"):
@@ -136,7 +154,7 @@ if st.button("Save"):
         'description': st.session_state['description'],
         'menu_photo': menu_photo,
         'ingredients': list(st.session_state.current_ingredients),  # Ensure this is a copy
-        'tags': selected_tags,
+        'tags': st.session_state['generated_tags'],
         'nutrition': {
             'calories': st.session_state['calories'],
             'proteins': st.session_state['proteins'],

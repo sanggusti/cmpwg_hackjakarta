@@ -35,6 +35,7 @@ def get_preamble(df_grm, df_review):
 df_grm, df_review = get_data()
 preamble = get_preamble(df_grm, df_review)
 
+
 def display_home_dashboard():
     st.set_page_config(
         page_title="Home Dashboard",
@@ -58,13 +59,51 @@ def display_home_dashboard():
         st.info("This is your merchant analysis dashboard")
         col1, col2 = st.columns(2)
         with col1:
-            st.text("Financial Analysis Report")
-            # Placeholder for Generated Report
+            st.subheader("Financial Analysis Report")
+            
+            # Financial Analysis using df_grm
+            total_revenue = df_grm['total_revenue'].sum()
+            total_orders = df_grm['total_orders'].sum()
+            avg_discount = df_grm['average_discount'].mean()
+            most_ordered_item = df_grm['most_ordered_item'].mode()[0]
+            
+            st.markdown(f"""
+            **Total Revenue:** Rp. {total_revenue:,.2f}  
+            **Total Orders:** {total_orders:,}  
+            **Average Discount:** {avg_discount:.2f}%  
+            **Most Ordered Item:** {most_ordered_item}
+            """)
+
+            # Button to generate a summary using Cohere
+            if st.button("Generate Summary"):
+                summary_prompt = (
+                    f"Generate a financial summary based on the following data:\n"
+                    f"Total Revenue: Rp. {total_revenue:,.2f}\n"
+                    f"Total Orders: {total_orders:,}\n"
+                    f"Average Discount: {avg_discount:.2f}%\n"
+                    f"Most Ordered Item: {most_ordered_item}\n"
+                )
+                response = co.generate(
+                    model='command-r-plus',
+                    prompt=summary_prompt,
+                    max_tokens=200,
+                    temperature=0.7,
+                )
+                summary = response.generations[0].text.strip()
+                st.markdown(f"**Generated Summary:**\n{summary}")
             
         with col2:
-            st.text("Latest Transaction")
-            # Placeholder for Dataset Graph
-            st.table(df_grm.head())
+            st.subheader("Weekly Price vs. Discounted Price")
+            
+            # Group data by 'date' for weekly totals and create a comparison bar chart
+            df_grm['date'] = pd.to_datetime(df_grm['date'])
+            weekly_summary = df_grm.groupby('date').agg({
+                'weekly_total_price': 'sum',
+                'weekly_total_discount_price': 'sum'
+            }).reset_index()
+
+            # Plotting the comparison chart
+            st.bar_chart(weekly_summary.set_index('date')[['weekly_total_price', 'weekly_total_discount_price']])
 
     with tab2:
         # Initialize chat messages in session state
