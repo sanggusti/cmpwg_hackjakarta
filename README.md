@@ -16,6 +16,26 @@ To get started with our project, please follow these steps:
 4. Add `.env` file with content of `COHERE_API_KEY` and `TAVILY_API_KEY`.
 5. Explore the project files and documentation to understand the structure and functionality.
 
+## Demo
+
+1. Generate Report based on Selling, Sentiment and Batched Pipeline-like Data
+
+![Main](docs/generate_report.gif)
+
+2. Menu Input, Generate Caption, Tagging and Nutritional Value generation for Merchant
+
+![Menu](docs/menu_assistant.gif)
+
+3. Financial Agent that are able to use Tools and validate the result and able to internet search
+
+![Agent](docs/agent_streamlit.gif)
+
+![Agent Terminal](docs/agent_terminal.gif)
+
+4. Image Enhancer with Diffusion
+
+![Image Enhancer](docs/image_enhancer.png)
+
 ## Contact
 
 If you have any questions or suggestions regarding our project, please feel free to reach out to us. You can contact us via email in my bio.
