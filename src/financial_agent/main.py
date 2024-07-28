@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
-from agent import cohere_agent, tools
-from preamble import create_preamble
-from data_loader import load_data
+from src.financial_agent.agent import cohere_agent, tools
+from src.financial_agent.preamble import create_preamble
+from src.financial_agent.data_loader import load_data
 
 load_dotenv()
 

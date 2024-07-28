@@ -1,5 +1,5 @@
 import pandas as pd
-from config import TRX_URI, REVIEW_URI
+from src.financial_agent.config import TRX_URI, REVIEW_URI
 
 def create_preamble(df_grm: pd.DataFrame, df_review: pd.DataFrame) -> str:
     preamble = f"""
@@ -12,6 +12,7 @@ def create_preamble(df_grm: pd.DataFrame, df_review: pd.DataFrame) -> str:
     {df_grm.drop('product', axis=1).head().to_markdown()} 
     Here is a preview of the dataframe of Review: 
     {df_review.drop('reviews', axis=1).head().to_markdown()}
+    Run the code only to the columns in those dataframe. Only process the columns on those dataframe.
     """
 
     return preamble
