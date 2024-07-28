@@ -4,7 +4,7 @@ from langchain.agents import Tool
 from langchain_cohere.chat_models import ChatCohere
 from langchain_core.pydantic_v1 import BaseModel, Field
 from langchain_experimental.utilities import PythonREPL
-from config import COHERE_API_KEY, COHERE_MODEL
+from src.financial_agent.config import COHERE_API_KEY, COHERE_MODEL
 
 # setup the cohere client
 co = cohere.Client(api_key=COHERE_API_KEY)

@@ -1,8 +1,7 @@
 import streamlit as st
 
-# Sample function to decide layout size
+# Function to define the layout size based on the index
 def get_layout_size(index):
-    # Return size for columns, e.g., 3:1:2 layout, change based on your layout preference
     if index % 3 == 0:
         return 3
     elif index % 3 == 1:
@@ -13,17 +12,22 @@ def get_layout_size(index):
 # Page title
 st.title("Menu Collage")
 
-
 # Check if there are any saved menu items
 if 'menu_items' in st.session_state and st.session_state['menu_items']:
     items = st.session_state['menu_items']
-    num_items = len(items)
 
     for index, item in enumerate(items):
+        # Determine column layout size
         col_size = get_layout_size(index)
         cols = st.columns(col_size)
-        with cols[0]:  # Only using the first column, adjust for more complex layouts
-            st.image(item['menu_photo'], caption=item['food_name'], use_column_width=True)
+        
+        with cols[0]:  # Using the first column for displaying content
+            # Display menu photo if available
+            if item['menu_photo'] is not None:
+                st.image(item['menu_photo'], caption=item['food_name'], use_column_width=True)
+            else:
+                st.write(item['food_name'])
+            
             st.write(item['description'])
             st.write("Ingredients: ", ", ".join(item['ingredients']))
             st.write("Tags: ", ", ".join(item['tags']))
