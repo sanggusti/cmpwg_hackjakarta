@@ -17,3 +17,4 @@ hnswlib==0.8.0
 unstructured==0.15.0
 streamlit==1.37.0
 transformers==4.43.3
+gradio_client==1.1.1
