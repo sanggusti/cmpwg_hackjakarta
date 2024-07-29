@@ -165,7 +165,10 @@ data/img
 #.idea/
 
 # .ipynb files
-*.ipynb
+financial-agent.ipynb
+calories-counter.ipynb
+img-enhancer.ipynb
 
 # sentiment.json
 sentiment.json
+
